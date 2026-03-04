@@ -1,0 +1,185 @@
+{% extends "taxi/base_taxi.html" %}
+{% block content %}
+
+<div class="container">
+
+    <!-- HEADER -->
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h2 class="fw-bold">🧾 Mes Courses</h2>
+            <p class="text-muted mb-0">
+                Suivez vos propositions et courses confirmées
+            </p>
+        </div>
+    </div>
+
+
+    <!-- ================= PROPOSITIONS ================= -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4 class="fw-bold mb-0">📤 Propositions envoyées</h4>
+        <span class="badge bg-secondary">
+            {{ propositions|length }}
+        </span>
+    </div>
+
+    {% if propositions %}
+        <div class="row">
+            {% for proposition in propositions %}
+            <div class="col-lg-6 mb-3">
+                <div class="card shadow-sm border-0 h-100">
+                    <div class="card-body">
+
+                        <h6 class="fw-bold mb-3">
+                            👤 Client : {{ proposition.course.client.user.username }}
+                        </h6>
+
+                        <p class="mb-1">
+                            <strong>Départ :</strong><br>
+                            {{ proposition.course.adresse_depart }}
+                        </p>
+
+                        <p class="mb-2">
+                            <strong>Destination :</strong><br>
+                            {{ proposition.course.adresse_arrivee }}
+                        </p>
+
+                        <hr>
+
+                        <div class="row text-center">
+                            <div class="col-6">
+                                <small class="text-muted">Prix proposé</small>
+                                <div class="fw-bold text-primary">
+                                    {{ proposition.prix_propose }} €
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <small class="text-muted">Temps d'arrivée</small>
+                                <div class="fw-bold">
+                                    {{ proposition.temps_arrivee }} min
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-3">
+                            <span class="badge bg-warning w-100 py-2">
+                                ⏳ En attente de paiement client
+                            </span>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-info">
+            Aucune proposition en attente.
+        </div>
+    {% endif %}
+
+
+    <hr class="my-5">
+
+
+    <!-- ================= COURSES CONFIRMÉES ================= -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4 class="fw-bold mb-0">✅ Courses confirmées</h4>
+        <span class="badge bg-success">
+            {{ courses_confirmed|length }}
+        </span>
+    </div>
+
+    {% if courses_confirmed %}
+        <div class="row">
+            {% for course in courses_confirmed %}
+            <div class="col-lg-6 mb-3">
+                <div class="card shadow-sm border-0 h-100">
+                    <div class="card-body">
+
+                        <h6 class="fw-bold mb-3">
+                            👤 Client : {{ course.client.user.username }}
+                        </h6>
+
+                        <p class="mb-1">
+                            <strong>Départ :</strong><br>
+                            {{ course.adresse_depart }}
+                        </p>
+
+                        <p class="mb-2">
+                            <strong>Destination :</strong><br>
+                            {{ course.adresse_arrivee }}
+                        </p>
+
+                        <hr>
+
+                        <div class="row text-center">
+                            <div class="col-6">
+                                <small class="text-muted">Prix</small>
+                                <div class="fw-bold text-success">
+                                    {{ course.prix_propose }} €
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <small class="text-muted">Arrivée estimée</small>
+                                <div class="fw-bold">
+                                    <span class="countdown"
+                                          data-arrivee="{{ course.arrivee_estimee|date:'U'|default_if_none:0 }}">
+                                        Calcul...
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-3">
+                            <span class="badge bg-success w-100 py-2">
+                                ✔ Confirmée & Payée
+                            </span>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-light border">
+            Aucune course confirmée pour le moment.
+        </div>
+    {% endif %}
+
+</div>
+
+
+<!-- ================= COUNTDOWN SCRIPT ================= -->
+<script>
+document.querySelectorAll(".countdown").forEach(function(span) {
+
+    const arriveeTimestamp = parseInt(span.dataset.arrivee, 10) * 1000;
+
+    if (isNaN(arriveeTimestamp) || arriveeTimestamp <= 0) {
+        span.textContent = "Heure inconnue";
+        return;
+    }
+
+    function updateTimer() {
+        const now = Date.now();
+        let distance = arriveeTimestamp - now;
+
+        if (distance <= 0) {
+            span.innerHTML = "<span class='text-danger'>Arrivé ✔</span>";
+            return;
+        }
+
+        const minutes = Math.floor(distance / 60000);
+        const seconds = Math.floor((distance % 60000) / 1000);
+
+        span.textContent = `${minutes}:${seconds.toString().padStart(2,'0')} min`;
+
+        setTimeout(updateTimer, 1000);
+    }
+
+    updateTimer();
+});
+</script>
+
+{% endblock %}

@@ -1,0 +1,125 @@
+{% extends 'taxi/base_taxi.html' %}
+
+{% block title %}Voiture Taxi - BelAfriGo{% endblock %}
+
+{% block content %}
+
+<div class="container">
+
+    <!-- HEADER -->
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h2 class="fw-bold">🚗 Ma Voiture</h2>
+            <p class="text-muted mb-0">
+                Informations du véhicule utilisé pour vos courses
+            </p>
+        </div>
+    </div>
+
+    <div class="row">
+
+        <!-- CARTE RESUME VEHICULE -->
+        <div class="col-lg-4 mb-4">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body text-center">
+
+                    <div class="display-1 mb-3">
+                        🚖
+                    </div>
+
+                    <h5 class="fw-bold mb-1">
+                        {{ taxi.marque|default:"Marque non définie" }}
+                    </h5>
+
+                    <p class="text-muted mb-2">
+                        {{ taxi.modele|default:"Modèle non défini" }}
+                    </p>
+
+                    <hr>
+
+                    <div class="text-start">
+                        <small class="text-muted">Couleur</small>
+                        <div class="fw-bold">
+                            {{ taxi.couleur|default:"Non définie" }}
+                        </div>
+                    </div>
+
+                    <div class="mt-4">
+                        <span class="badge bg-success w-100 py-2">
+                            Véhicule actif
+                        </span>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+        <!-- FORMULAIRE MODIFICATION -->
+        <div class="col-lg-8">
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+
+                    <h5 class="fw-bold mb-3">Modifier les informations du véhicule</h5>
+
+                    <form method="POST">
+                        {% csrf_token %}
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="id_marque" class="form-label">
+                                    Marque
+                                </label>
+                                <input type="text"
+                                       class="form-control"
+                                       id="id_marque"
+                                       name="marque"
+                                       value="{{ taxi.marque|default:'' }}"
+                                       placeholder="Ex: Mercedes"
+                                       required>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="id_modele" class="form-label">
+                                    Modèle
+                                </label>
+                                <input type="text"
+                                       class="form-control"
+                                       id="id_modele"
+                                       name="modele"
+                                       value="{{ taxi.modele|default:'' }}"
+                                       placeholder="Ex: Classe E"
+                                       required>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="id_couleur" class="form-label">
+                                Couleur
+                            </label>
+                            <input type="text"
+                                   class="form-control"
+                                   id="id_couleur"
+                                   name="couleur"
+                                   value="{{ taxi.couleur|default:'' }}"
+                                   placeholder="Ex: Noir"
+                                   required>
+                        </div>
+
+                        <div class="d-grid mt-4">
+                            <button type="submit" class="btn btn-primary">
+                                💾 Mettre à jour le véhicule
+                            </button>
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

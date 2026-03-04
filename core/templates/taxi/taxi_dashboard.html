@@ -1,0 +1,228 @@
+{% extends 'taxi/base_taxi.html' %}
+
+{% block title %}Dashboard Taxi{% endblock %}
+
+{% block content %}
+
+<div class="container py-4">
+
+    <!-- HEADER -->
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h2 class="fw-bold">🚖 Tableau de bord Taxi</h2>
+            <p class="text-muted mb-0">
+                Gérez vos courses en temps réel – Belgique
+            </p>
+        </div>
+        <div class="col-md-4 text-md-end mt-3 mt-md-0">
+
+            {% if is_paid %}
+                <span class="badge bg-success fs-6">
+                    ✅ Compte actif
+                </span>
+            {% else %}
+                <span class="badge bg-warning text-dark fs-6">
+                    ⚠ Paiement requis
+                </span>
+            {% endif %}
+
+        </div>
+    </div>
+
+    <!-- ALERTE PAIEMENT -->
+    {% if not is_paid %}
+    <div class="alert alert-warning d-flex justify-content-between align-items-center">
+        <div>
+            <strong>Votre inscription taxi n'est pas encore payée.</strong><br>
+            Vous devez payer pour accepter des courses.
+        </div>
+        <a href="{% url 'taxi_payment' %}" class="btn btn-primary">
+            Payer maintenant (5 €)
+        </a>
+    </div>
+    {% endif %}
+
+    <!-- STATISTIQUES RAPIDES -->
+    <div class="row mb-4 text-center">
+        <div class="col-md-4 mb-3">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h6 class="text-muted">Courses disponibles</h6>
+                    <h3 id="course-count" class="fw-bold">
+                        {{ courses|length }}
+                    </h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h6 class="text-muted">Statut du compte</h6>
+                    {% if is_paid %}
+                        <h5 class="text-success">Actif</h5>
+                    {% else %}
+                        <h5 class="text-danger">Inactif</h5>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h6 class="text-muted">Actualisation</h6>
+                    <h5 class="text-primary">Toutes les 10 sec</h5>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- NOUVELLES COURSES -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4 class="fw-bold mb-0">📍 Nouvelles demandes</h4>
+        <button class="btn btn-outline-secondary btn-sm" onclick="loadCourses()">
+            🔄 Rafraîchir
+        </button>
+    </div>
+
+    <div id="courses-container">
+
+        {% if courses %}
+            {% for course in courses %}
+                <div class="card mb-3 shadow-sm border-0">
+                    <div class="card-body">
+
+                        <div class="row">
+                            <div class="col-md-8">
+                                <p class="mb-1">
+                                    <strong>Départ :</strong> {{ course.adresse_depart }}
+                                </p>
+                                <p class="mb-1">
+                                    <strong>Destination :</strong> {{ course.adresse_arrivee }}
+                                </p>
+                                <small class="text-muted">
+                                    Nouvelle demande
+                                </small>
+                            </div>
+
+                            <div class="col-md-4">
+                                <form method="POST" action="{% url 'proposer_course' course.id %}">
+                                    {% csrf_token %}
+
+                                    <div class="mb-2">
+                                        <input type="number"
+                                               step="0.01"
+                                               name="prix"
+                                               class="form-control form-control-sm"
+                                               placeholder="Prix (€)"
+                                               required>
+                                    </div>
+
+                                    <div class="mb-2">
+                                        <input type="text"
+                                               name="temps"
+                                               class="form-control form-control-sm"
+                                               placeholder="Temps d'arrivée (ex: 10 min)"
+                                               required>
+                                    </div>
+
+                                    <button type="submit"
+                                            class="btn btn-success btn-sm w-100">
+                                        ✔ Proposer
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="alert alert-info">
+                Aucune demande pour le moment.
+            </div>
+        {% endif %}
+
+    </div>
+
+</div>
+
+
+<script>
+const csrfToken = "{{ csrf_token }}";
+
+function loadCourses() {
+    fetch("{% url 'ajax_courses' %}")
+    .then(response => response.json())
+    .then(data => {
+
+        const container = document.getElementById("courses-container");
+        const countElement = document.getElementById("course-count");
+
+        container.innerHTML = "";
+        countElement.innerText = data.courses.length;
+
+        if (data.courses.length === 0) {
+            container.innerHTML = `
+                <div class="alert alert-info">
+                    Aucune demande pour le moment.
+                </div>
+            `;
+            return;
+        }
+
+        data.courses.forEach(course => {
+
+            const card = document.createElement("div");
+            card.className = "card mb-3 shadow-sm border-0";
+
+            card.innerHTML = `
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <p class="mb-1"><strong>Départ :</strong> ${course.pickup}</p>
+                            <p class="mb-1"><strong>Destination :</strong> ${course.destination}</p>
+                            <small class="text-muted">${course.created_at}</small>
+                        </div>
+
+                        <div class="col-md-4">
+                            <form method="POST" action="/taxi/proposer-course/${course.id}/">
+                                <input type="hidden" name="csrfmiddlewaretoken" value="${csrfToken}">
+
+                                <div class="mb-2">
+                                    <input type="number" step="0.01"
+                                           name="prix"
+                                           class="form-control form-control-sm"
+                                           placeholder="Prix (€)" required>
+                                </div>
+
+                                <div class="mb-2">
+                                    <input type="text"
+                                           name="temps"
+                                           class="form-control form-control-sm"
+                                           placeholder="Temps d'arrivée"
+                                           required>
+                                </div>
+
+                                <button type="submit"
+                                        class="btn btn-success btn-sm w-100">
+                                    ✔ Proposer
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            container.appendChild(card);
+        });
+    })
+    .catch(err => console.error("Erreur AJAX courses:", err));
+}
+
+loadCourses();
+setInterval(loadCourses, 10000);
+</script>
+
+{% endblock %}

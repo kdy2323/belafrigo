@@ -1,0 +1,65 @@
+{% extends "taxi/base_taxi.html" %}
+{% block content %}
+
+<div class="container mt-5">
+    <h2 class="mb-4">💰 Mon Solde</h2>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card shadow p-4 mb-4">
+                <h5>Solde à recevoir</h5>
+                <h2 class="text-warning">{{ solde_a_recevoir }} €</h2>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card shadow p-4 mb-4">
+                <h5>Solde déjà reçu</h5>
+                <h2 class="text-success">{{ solde_recu }} €</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow p-4">
+        <h4>Historique des courses</h4>
+
+        {% if courses_recues or courses_a_recevoir %}
+            <table class="table mt-3">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Départ</th>
+                        <th>Arrivée</th>
+                        <th>Prix</th>
+                        <th>Statut paiement</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for course in courses_recues %}
+                    <tr>
+                        <td>{{ course.created_at|date:"d/m/Y H:i" }}</td>
+                        <td>{{ course.adresse_depart }}</td>
+                        <td>{{ course.adresse_arrivee }}</td>
+                        <td>{{ course.prix_propose }} €</td>
+                        <td><span class="badge bg-success">Reçu</span></td>
+                    </tr>
+                    {% endfor %}
+
+                    {% for course in courses_a_recevoir %}
+                    <tr>
+                        <td>{{ course.created_at|date:"d/m/Y H:i" }}</td>
+                        <td>{{ course.adresse_depart }}</td>
+                        <td>{{ course.adresse_arrivee }}</td>
+                        <td>{{ course.prix_propose }} €</td>
+                        <td><span class="badge bg-warning text-dark">En attente</span></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p class="text-muted mt-3">Aucune course pour le moment.</p>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

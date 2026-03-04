@@ -1,0 +1,124 @@
+{% extends "client/base_client.html" %}
+
+{% block content %}
+
+<div class="container">
+
+    <h3 class="mb-4">🚖 Mes courses payées</h3>
+
+    {% if courses %}
+        <div class="row g-3">
+
+        {% for course in courses %}
+            <div class="col-12">
+                <div class="card shadow-sm border-0">
+                    <div class="card-body">
+
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <h5 class="card-title mb-0">
+                                <strong>Départ:</strong> {{ course.adresse_depart }}
+                            </h5>
+                            {% if course.taxi %}
+                                <span class="badge bg-success">Taxi assigné</span>
+                            {% else %}
+                                <span class="badge bg-warning text-dark">Taxi non assigné</span>
+                            {% endif %}
+                        </div>
+
+                        <p class="mb-1"><strong>Arrivée:</strong> {{ course.adresse_arrivee }}</p>
+
+                        {% if course.taxi %}
+                            <p class="mb-1">
+                                <strong>Taxi:</strong> {{ course.taxi.user.username }}
+                                {% if course.taxi.marque %}- {{ course.taxi.marque }}{% endif %}
+                                {% if course.taxi.couleur %}({{ course.taxi.couleur }}){% endif %}
+                            </p>
+                        {% endif %}
+
+                        <p class="mb-1"><strong>Prix:</strong> {{ course.prix_propose }} €</p>
+                        <p class="mb-2">
+                            <strong>Temps d'arrivée:</strong>
+                            <span class="countdown" data-arrivee="{{ course.arrivee_estimee|date:'U'|default_if_none:0 }}">
+                                Calcul en cours...
+                            </span>
+                        </p>
+
+                        {% if course.taxi and course.taxi.phone_number %}
+                            <button class="btn btn-danger taxi-not-arrived d-none"
+                                    data-phone="{{ course.taxi.phone_number }}"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#taxiModal">
+                                Taxi pas arrivé
+                            </button>
+                        {% endif %}
+
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+
+        </div>
+    {% else %}
+        <p class="text-muted">Aucune course payée pour le moment.</p>
+    {% endif %}
+
+    <!-- Modal contact taxi -->
+    <div class="modal fade" id="taxiModal" tabindex="-1" aria-labelledby="taxiModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="taxiModalLabel">Taxi non arrivé</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+          </div>
+          <div class="modal-body">
+            Contact du taxi : <span id="taxiPhone" class="fw-bold"></span>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+</div>
+
+<script>
+document.querySelectorAll(".countdown").forEach(function(span) {
+    const arriveeTimestamp = parseInt(span.dataset.arrivee, 10) * 1000;
+    const btn = span.closest('.card-body').querySelector(".taxi-not-arrived");
+
+    if (isNaN(arriveeTimestamp) || arriveeTimestamp <= 0) {
+        span.textContent = "Arrivée estimée inconnue";
+        return;
+    }
+
+    function updateTimer() {
+        const now = Date.now();
+        let distance = arriveeTimestamp - now;
+
+        if (distance <= 0) {
+            span.textContent = "Arrivé !";
+            if (btn) btn.classList.remove("d-none");
+            return;
+        }
+
+        const minutes = Math.floor(distance / 60000);
+        const seconds = Math.floor((distance % 60000) / 1000);
+        span.textContent = `${minutes}:${seconds.toString().padStart(2,'0')} min`;
+
+        setTimeout(updateTimer, 1000);
+    }
+
+    updateTimer();
+});
+
+// Modal pour numéro taxi
+const taxiModal = document.getElementById('taxiModal');
+taxiModal.addEventListener('show.bs.modal', function (event) {
+    const button = event.relatedTarget;
+    const phone = button.getAttribute('data-phone');
+    taxiModal.querySelector('#taxiPhone').textContent = phone;
+});
+</script>
+
+{% endblock %}

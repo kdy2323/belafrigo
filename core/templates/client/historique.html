@@ -1,0 +1,93 @@
+{% extends 'client/base_client.html' %}
+
+{% block title %}Historique de vos courses - BelAfriGo{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+
+    <h2 class="mb-3">Historique de vos courses et paiements</h2>
+
+    <!-- Courses payées -->
+    <h3>Courses payées</h3>
+    {% if courses %}
+        <div class="accordion mb-4" id="coursesAccordion">
+            {% for course in courses %}
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="courseHeading{{ course.id }}">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#courseCollapse{{ course.id }}" aria-expanded="false" aria-controls="courseCollapse{{ course.id }}">
+                        Course #{{ course.id }} - {{ course.created_at|date:"d/m/Y H:i" }}
+                    </button>
+                </h2>
+                <div id="courseCollapse{{ course.id }}" class="accordion-collapse collapse" aria-labelledby="courseHeading{{ course.id }}" data-bs-parent="#coursesAccordion">
+                    <div class="accordion-body">
+                        <p><strong>Départ:</strong> {{ course.adresse_depart }}</p>
+                        <p><strong>Arrivée:</strong> {{ course.adresse_arrivee }}</p>
+                        <p><strong>Taxi:</strong> 
+                            {% if course.taxi %}
+                                {{ course.taxi.user.username }} - {{ course.taxi.marque }} {{ course.taxi.couleur }}
+                            {% else %}
+                                Non assigné
+                            {% endif %}
+                        </p>
+                        <p><strong>Prix:</strong> {{ course.prix_propose|default:"-" }} €</p>
+                        <p><strong>Statut:</strong> <span class="badge bg-success">{{ course.status|capfirst }}</span></p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-info">Aucune course payée pour le moment.</div>
+    {% endif %}
+
+    <!-- Paiements -->
+    <h3>Paiements</h3>
+    {% if payments %}
+        <div class="accordion" id="paymentsAccordion">
+            {% for payment in payments %}
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="paymentHeading{{ payment.id }}">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#paymentCollapse{{ payment.id }}" aria-expanded="false" aria-controls="paymentCollapse{{ payment.id }}">
+                        Paiement #{{ payment.id }} - {{ payment.created_at|date:"d/m/Y H:i" }}
+                    </button>
+                </h2>
+                <div id="paymentCollapse{{ payment.id }}" class="accordion-collapse collapse" aria-labelledby="paymentHeading{{ payment.id }}" data-bs-parent="#paymentsAccordion">
+                    <div class="accordion-body">
+                        <p><strong>Montant:</strong> {{ payment.amount|default:0 }} €</p>
+                        <p><strong>Statut:</strong> 
+                            {% if payment.status in "success,paid" %}
+                                <span class="badge bg-success">{{ payment.status|capfirst }}</span>
+                            {% else %}
+                                <span class="badge bg-warning text-dark">{{ payment.status|capfirst }}</span>
+                            {% endif %}
+                        </p>
+                        <p><strong>Date:</strong> {{ payment.created_at|date:"d/m/Y H:i" }}</p>
+                        {% if payment.course %}
+                            <p><strong>Course associée:</strong> ID {{ payment.course.id }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-info">Aucun paiement enregistré pour le moment.</div>
+    {% endif %}
+
+</div>
+
+<!-- Optionnel : script pour améliorer les accordéons si besoin -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // Fermer tous les accordéons à l'ouverture d'un autre
+    const accordions = document.querySelectorAll('.accordion-button');
+    accordions.forEach(button => {
+        button.addEventListener('click', () => {
+            accordions.forEach(b => {
+                if (b !== button) b.classList.add('collapsed');
+            });
+        });
+    });
+});
+</script>
+{% endblock %}

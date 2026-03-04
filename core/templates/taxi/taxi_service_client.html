@@ -1,0 +1,193 @@
+{% extends 'taxi/base_taxi.html' %}
+
+{% block title %}Service Client Taxi - BelAfriGo{% endblock %}
+
+{% block content %}
+
+<div class="container">
+
+    <!-- HEADER -->
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h2 class="fw-bold">📞 Service Client – Espace Taxi</h2>
+            <p class="text-muted mb-0">
+                Assistance et support pour les chauffeurs BelAfriGo
+            </p>
+        </div>
+    </div>
+
+
+    <!-- CONTACT URGENT -->
+    <div class="alert alert-dark d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <strong>Besoin d’aide immédiate ?</strong><br>
+            Contactez notre support chauffeur.
+        </div>
+        <div class="text-end">
+            <a href="tel:+32467703246" class="btn btn-warning btn-sm mb-1">
+                📞 +32 467 70 32 46
+            </a><br>
+            <a href="mailto:serviceclient@belafrigo.com" class="text-white">
+                serviceclient@belafrigo.com
+            </a>
+        </div>
+    </div>
+
+
+    <!-- FAQ -->
+    <div class="card shadow-sm border-0">
+        <div class="card-body">
+
+            <h4 class="fw-bold mb-3">❓ Questions fréquentes</h4>
+
+            <div class="accordion" id="faqTaxi">
+
+                <!-- Paiement -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button" type="button"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#collapseOne">
+                            💳 Problème avec l’abonnement ou le paiement
+                        </button>
+                    </h2>
+                    <div id="collapseOne"
+                         class="accordion-collapse collapse show"
+                         data-bs-parent="#faqTaxi">
+                        <div class="accordion-body">
+                            Si votre paiement n’est pas validé ou que vous ne pouvez pas proposer des courses,
+                            vérifiez votre statut d’abonnement dans le tableau de bord.
+                            <br><br>
+                            Si le problème persiste, contactez le service client.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Client absent -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed"
+                                type="button"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#collapseTwo">
+                            🚖 Client absent au point de rendez-vous
+                        </button>
+                    </h2>
+                    <div id="collapseTwo"
+                         class="accordion-collapse collapse"
+                         data-bs-parent="#faqTaxi">
+                        <div class="accordion-body">
+                            Attendez le délai estimé indiqué.
+                            <br><br>
+                            ✔ Contactez le client<br>
+                            ✔ Vérifiez l’adresse<br>
+                            ✔ Signalez l’incident si nécessaire
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Adresse incorrecte -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed"
+                                type="button"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#collapseThree">
+                            📍 Adresse incorrecte ou introuvable
+                        </button>
+                    </h2>
+                    <div id="collapseThree"
+                         class="accordion-collapse collapse"
+                         data-bs-parent="#faqTaxi">
+                        <div class="accordion-body">
+                            Contactez immédiatement le client pour confirmation.
+                            <br><br>
+                            Si l’erreur persiste, informez le service client.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Problème technique -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed"
+                                type="button"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#collapseFour">
+                            ⚙️ Problème technique avec la plateforme
+                        </button>
+                    </h2>
+                    <div id="collapseFour"
+                         class="accordion-collapse collapse"
+                         data-bs-parent="#faqTaxi">
+                        <div class="accordion-body">
+                            ✔ Rafraîchissez la page<br>
+                            ✔ Déconnectez-vous et reconnectez-vous<br>
+                            ✔ Vérifiez votre connexion internet
+                            <br><br>
+                            Si le problème continue, contactez-nous.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modifier profil -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed"
+                                type="button"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#collapseFive">
+                            📱 Modifier mes informations
+                        </button>
+                    </h2>
+                    <div id="collapseFive"
+                         class="accordion-collapse collapse"
+                         data-bs-parent="#faqTaxi">
+                        <div class="accordion-body">
+                            Vous pouvez modifier :
+                            <ul>
+                                <li>Votre numéro de téléphone</li>
+                                <li>Les informations du véhicule</li>
+                            </ul>
+                            Depuis les sections <strong>Profil</strong> et <strong>Ma Voiture</strong>.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Urgence -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed"
+                                type="button"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#collapseSix">
+                            🚨 Situation urgente pendant une course
+                        </button>
+                    </h2>
+                    <div id="collapseSix"
+                         class="accordion-collapse collapse"
+                         data-bs-parent="#faqTaxi">
+                        <div class="accordion-body">
+                            En cas d’urgence :
+                            <br><br>
+                            ✔ Assurez votre sécurité<br>
+                            ✔ Contactez les services d'urgence (112 en Belgique)<br>
+                            ✔ Informez ensuite BelAfriGo
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+
+    <p class="mt-4 text-center text-muted">
+        Notre équipe support est disponible pour vous accompagner et garantir
+        le bon déroulement de vos courses.
+    </p>
+
+</div>
+
+{% endblock %}

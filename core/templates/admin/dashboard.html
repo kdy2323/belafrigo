@@ -1,0 +1,82 @@
+{% extends "admin/base_admin.html" %}
+
+{% block content %}
+<div class="container my-4">
+    <h2 class="mb-4 text-center">💰 Paiements Taxis – Admin</h2>
+
+    {% if taxis %}
+    <div class="table-responsive">
+        <table class="table table-hover shadow-sm align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th>Taxi</th>
+                    <th>Voiture</th>
+                    <th>Solde à recevoir (€)</th>
+                    <th>Solde reçu (€)</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for taxi in taxis %}
+                <tr>
+                    <td>{{ taxi.user.username }}</td>
+                    <td>
+                        {% if taxi.marque %}{{ taxi.marque }}{% endif %}
+                        {% if taxi.modele %} {{ taxi.modele }}{% endif %}
+                        {% if taxi.couleur %} ({{ taxi.couleur }}){% endif %}
+                    </td>
+                    <td>
+                        <span class="badge bg-warning text-dark">{{ taxi.solde_a_recevoir }} €</span>
+                    </td>
+                    <td>
+                        <span class="badge bg-success">{{ taxi.solde_recu }} €</span>
+                    </td>
+                    <td>
+                        {% if taxi.courses_a_payer %}
+                            <button class="btn btn-primary btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#coursesTaxi{{ taxi.id }}" aria-expanded="false" aria-controls="coursesTaxi{{ taxi.id }}">
+                                Voir les paiements ({{ taxi.courses_a_payer|length }})
+                            </button>
+
+                            <div class="collapse mt-2" id="coursesTaxi{{ taxi.id }}">
+                                <div class="card card-body p-2">
+                                    {% for course in taxi.courses_a_payer %}
+                                    <form method="POST" action="{% url 'payer_course' course.id %}" class="d-flex justify-content-between align-items-center mb-1">
+                                        {% csrf_token %}
+                                        <div>
+                                            Course #{{ course.id }} - {{ course.prix_propose }} €
+                                        </div>
+                                        <button class="btn btn-success btn-sm">Valider</button>
+                                    </form>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% else %}
+                            <span class="text-muted">Aucun paiement en attente</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+        <div class="alert alert-info text-center">Aucun taxi enregistré pour le moment.</div>
+    {% endif %}
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // Simple collapse auto-close (optionnel)
+    const collapseElements = document.querySelectorAll('.collapse');
+    collapseElements.forEach(el => {
+        el.addEventListener('show.bs.collapse', () => {
+            collapseElements.forEach(other => {
+                if (other !== el) {
+                    bootstrap.Collapse.getInstance(other)?.hide();
+                }
+            });
+        });
+    });
+});
+</script>
+{% endblock %}

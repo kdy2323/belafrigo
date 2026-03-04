@@ -1,0 +1,81 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Inscription - BelAfriGo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="icon" href="{% static 'img/favi.ico' %}" type="image/x-icon">
+</head>
+<body>
+
+<div class="vh-100 d-flex justify-content-center align-items-center" 
+     style="background: linear-gradient(135deg, #040007, #05ec2c);">
+
+    <div class="card shadow-lg p-4" style="width: 400px; border-radius:15px;">
+        <div class="text-center mb-4">
+            <img src="{% static 'img/logo.png' %}" alt="BelAfriGo Logo" style="width:100px;">
+            <h3 class="mt-3 text-white">Créer un compte</h3>
+        </div>
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <!-- Affichage des erreurs -->
+            {% if form.errors %}
+                <div class="alert alert-danger">
+                    {% for field in form %}
+                        {% for error in field.errors %}
+                            <div>{{ error }}</div>
+                        {% endfor %}
+                    {% endfor %}
+                    {% for error in form.non_field_errors %}
+                        <div>{{ error }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <div class="mb-3">
+                <input type="text" name="username" class="form-control form-control-lg" placeholder="Nom d'utilisateur" required>
+            </div>
+
+            <div class="mb-3">
+                <input type="email" name="email" class="form-control form-control-lg" placeholder="Email" required>
+            </div>
+
+            <div class="mb-3">
+                <input type="password" name="password1" class="form-control form-control-lg" placeholder="Mot de passe" required>
+            </div>
+
+            <div class="mb-3">
+                <input type="password" name="password2" class="form-control form-control-lg" placeholder="Confirmer le mot de passe" required>
+            </div>
+
+            <div class="mb-3">
+                <select name="role" class="form-select form-select-lg" required>
+                    <option value="" selected disabled>Choisir votre rôle</option>
+                    <option value="client">Client</option>
+                    <option value="coiffeuse">Coiffeuse</option>
+                    <option value="taxi">Taxi</option>
+                </select>
+            </div>
+
+            <div class="d-grid mb-3">
+                <button type="submit" class="btn btn-success btn-lg">S'inscrire</button>
+            </div>
+
+            <div class="text-center">
+                <p class="text-black">Vous avez déjà un compte ? 
+                    <a href="{% url 'login' %}" class="text-success">Connexion</a>
+                </p>
+            </div>
+        </form>
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="{% static 'js/register.js' %}"></script>
+
+</body>
+</html>

@@ -1,0 +1,73 @@
+{% extends 'client/base_client.html' %}
+
+{% block title %}Propositions de vos taxis - BelAfriGo{% endblock %}
+
+{% block content %}
+
+<div class="container">
+
+    <h3 class="mb-4">🚖 Propositions de vos taxis</h3>
+
+    {% if courses %}
+        <div class="row g-3">
+
+        {% for course in courses %}
+            <div class="col-12">
+                <div class="card shadow-sm border-0">
+                    <div class="card-body">
+
+                        <h5 class="fw-bold mb-2">Course :</h5>
+                        <p class="mb-2">
+                            <strong>Départ :</strong> {{ course.adresse_depart }} <br>
+                            <strong>Arrivée :</strong> {{ course.adresse_arrivee }}
+                        </p>
+
+                        {% if course.propositions.all %}
+                            <hr>
+                            {% for proposition in course.propositions.all %}
+                                <div class="card mb-2 border-secondary shadow-sm">
+                                    <div class="card-body p-2">
+
+                                        <p class="mb-1">
+                                            <strong>Taxi :</strong> {{ proposition.taxi.user.username }}<br>
+                                            <strong>Prix :</strong> {{ proposition.prix_propose }} €<br>
+                                            <strong>Temps :</strong> {{ proposition.temps_arrivee }} min
+                                        </p>
+
+                                        <form method="POST" action="{% url 'accepter_course' course.id %}">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="proposition_id" value="{{ proposition.id }}">
+                                            <button type="submit" class="btn btn-success btn-sm w-100">
+                                                Accepter cette proposition
+                                            </button>
+                                        </form>
+
+                                    </div>
+                                </div>
+                            {% endfor %}
+
+                            <!-- Supprimer la course -->
+                            <form method="POST" action="{% url 'supprimer_course' course.id %}">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-danger btn-sm mt-2 w-100">
+                                    Supprimer la course
+                                </button>
+                            </form>
+
+                        {% else %}
+                            <p class="text-muted">Aucune proposition pour le moment.</p>
+                        {% endif %}
+
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+
+        </div>
+    {% else %}
+        <div class="alert alert-info">Aucune course en attente.</div>
+    {% endif %}
+
+</div>
+
+{% endblock %}

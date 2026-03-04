@@ -1,0 +1,66 @@
+{% extends 'client/base_client.html' %}
+
+{% block title %}Dashboard Client - BelAfriGo{% endblock %}
+
+{% block content %}
+
+<div class="container">
+
+    <!-- HEADER -->
+    <div class="row mb-4">
+        <div class="col-md-8 text-center mx-auto">
+            <h2 class="fw-bold">👋 Bienvenue, {{ request.user.username }}</h2>
+            <p class="text-muted mb-0">
+                Réservez un taxi ou découvrez nos prochains services.
+            </p>
+        </div>
+    </div>
+
+    <!-- CARDS D’ACTIONS -->
+    <div class="row justify-content-center g-4">
+
+        <!-- Commander un Taxi -->
+        <div class="row justify-content-center g-4">
+
+    <!-- TAXI -->
+    <div class="col-md-4">
+        <div class="card shadow-sm h-100 border-0 rounded-4">
+            <div class="card-body text-center d-flex flex-column justify-content-between">
+                <div>
+                    <h4 class="fw-bold mb-2">🚕 Commander un Taxi</h4>
+                    <p class="text-muted mb-3">
+                        Réservez un taxi rapidement et suivez votre course en temps réel.
+                    </p>
+                </div>
+                <a href="{% url 'commander_taxi' %}" 
+                   class="btn btn-warning btn-lg rounded-pill w-100">
+                    Commander maintenant
+                </a>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ESPACE FEMME -->
+    <div class="col-md-4">
+        <div class="card shadow-sm h-100 border-0 rounded-4">
+            <div class="card-body text-center d-flex flex-column justify-content-between">
+                <div>
+                    <h4 class="fw-bold mb-2">💇‍♀️ Espace Femme</h4>
+                    <p class="text-muted mb-3">
+                        Trouvez une coiffeuse ou esthéticienne spécialisée pour femmes.
+                    </p>
+                </div>
+                <a href="{% url 'client_search_coiffeuse' %}" 
+                   class="btn btn-danger btn-lg rounded-pill w-100">
+                    Prendre rendez-vous
+                </a>
+            </div>
+        </div>
+    </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

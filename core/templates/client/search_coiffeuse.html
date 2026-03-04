@@ -1,0 +1,117 @@
+{% extends 'client/base_client.html' %}
+
+{% block content %}
+<div class="container py-4">
+
+    <!-- TITRE -->
+    <div class="text-center mb-4">
+        <h2 class="fw-bold">
+            💇‍♀️ Trouver une coiffeuse / esthéticienne
+        </h2>
+        <p class="text-muted">
+            Sélectionnez votre ville et découvrez les professionnelles disponibles
+        </p>
+    </div>
+
+    <!-- RECHERCHE -->
+    <div class="row justify-content-center mb-5">
+        <div class="col-lg-6">
+            <form method="get">
+                <div class="input-group shadow-sm rounded-4">
+                    <select name="ville" class="form-select" required>
+                        <option value="">Choisir une ville</option>
+                        {% for value, label in cities %}
+                            <option value="{{ value }}" {% if ville == value %}selected{% endif %}>
+                                {{ label }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                    <button class="btn btn-danger rounded-end-4 px-4">
+                        🔍 Rechercher
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {% if ville %}
+        <div class="mb-4 text-center">
+            <h5 class="fw-semibold">
+                Résultats pour <span class="text-danger">{{ ville }}</span>
+            </h5>
+            <small class="text-muted">
+                Coiffeuses et Esthéticiennes disponibles actuellement
+            </small>
+        </div>
+
+        {% if coiffeuses %}
+            <div class="row g-4">
+
+                {% for coiffeuse in coiffeuses %}
+                    <div class="col-md-4">
+                        <div class="card border-0 shadow-sm h-100 rounded-4">
+
+                            <div class="card-body d-flex flex-column">
+
+                                <!-- Nom -->
+                                <h5 class="fw-bold text-center mb-3 text-danger">
+                                    {{ coiffeuse.salon_name }}
+                                </h5>
+
+                                <!-- Infos -->
+                                <div class="mb-3">
+                                    <p class="mb-2">
+                                        <strong>Services :</strong><br>
+                                        {{ coiffeuse.get_services_list|join:", " }}
+                                    </p>
+
+                                    <p class="mb-2">
+                                        <strong>Adresse :</strong><br>
+                                        {{ coiffeuse.address }}
+                                    </p>
+
+                                    <p>
+                                        <strong>Ville :</strong> {{ coiffeuse.ville }}
+                                    </p>
+                                </div>
+
+                                <hr>
+
+                                <!-- Liens -->
+                                <div class="mt-auto">
+
+                                    {% if coiffeuse.instagram_link %}
+                                        <a href="{{ coiffeuse.instagram_link }}" 
+                                           target="_blank"
+                                           class="btn btn-outline-danger btn-sm rounded-pill w-100 mb-2">
+                                            <i class="bi bi-instagram me-1"></i>
+                                            Instagram
+                                        </a>
+                                    {% endif %}
+
+                                    {% if coiffeuse.website_or_tiktok_link %}
+                                        <a href="{{ coiffeuse.website_or_tiktok_link }}" 
+                                           target="_blank"
+                                           class="btn btn-outline-secondary btn-sm rounded-pill w-100">
+                                            🌐 Site / TikTok
+                                        </a>
+                                    {% endif %}
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+
+            </div>
+
+        {% else %}
+            <div class="alert alert-warning text-center shadow-sm rounded-4">
+                Aucune coiffeuse disponible dans cette ville pour le moment.
+            </div>
+        {% endif %}
+    {% endif %}
+
+</div>
+{% endblock %}

@@ -1,0 +1,150 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Dashboard Coiffeuse{% endblock %}</title>
+
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <link rel="icon" href="{% static 'img/favi.ico' %}" type="image/x-icon">
+</head>
+
+<body class="bg-light">
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-danger shadow-sm">
+    <div class="container-fluid">
+
+        <button class="btn btn-light me-3 d-lg-none" data-bs-toggle="offcanvas" data-bs-target="#sidebar">
+            <i class="bi bi-list"></i>
+        </button>
+
+        <a class="navbar-brand fw-bold" href="#">
+            <img src="{% static 'img/logo.png' %}" width="30" height="30" class="me-2">
+            BelAfriGo
+        </a>
+        <div class="ms-auto d-flex align-items-center">
+            <span class="text-white me-3">
+                <i class="bi bi-person-circle"></i> {{ request.user.username }}
+            </span>
+            <a href="{% url 'logout' %}" class="btn btn-light btn-sm">
+                <i class="bi bi-box-arrow-right"></i> Déconnexion
+            </a>
+        </div>
+    </div>
+</nav>
+
+
+<div class="container-fluid">
+    <div class="row">
+
+        <!-- SIDEBAR DESKTOP -->
+        <nav id="sidebarMenu" class="col-lg-2 d-none d-lg-block bg-white shadow-sm vh-100">
+            <div class="position-sticky pt-4">
+                <ul class="nav flex-column">
+
+                    <li class="nav-item mb-2">
+                        <a class="nav-link text-dark" href="{% url 'coiffeuse_dashboard' %}">
+                            <i class="bi bi-speedometer2 text-danger me-2"></i>
+                            Dashboard
+                        </a>
+                    </li>
+
+                    <li class="nav-item mb-2">
+                        <a class="nav-link text-dark" href="{% url 'coiffeuse_infos' %}">
+                            <i class="bi bi-shop text-danger me-2"></i>
+                            Informations salon
+                        </a>
+                    </li>
+
+                    <li class="nav-item mb-2">
+                        <a class="nav-link text-dark" href="{% url 'coiffeuse_prestations' %}">
+                            <i class="bi bi-scissors text-danger me-2"></i>
+                            Prestations
+                        </a>
+                    </li>
+                    <li class="nav-item mb-2">
+                        <a class="nav-link text-dark" href="#">
+                            <i class="bi bi-scissors text-danger me-2"></i>
+                            Abonnements
+                        </a>
+                    </li>
+
+                    <hr>
+
+                    <li class="nav-item mb-2">
+                        <a class="nav-link text-dark" href="{% url 'coiffeuse_service_client' %}">
+                            <i class="bi bi-scissors text-danger me-2"></i>
+                            Service Client
+                        </a>
+                    </li>
+
+                </ul>
+            </div>
+        </nav>
+
+
+        <!-- SIDEBAR MOBILE -->
+        <div class="offcanvas offcanvas-start" tabindex="-1" id="sidebar">
+            <div class="offcanvas-header bg-danger text-white">
+                <h5 class="offcanvas-title">Menu</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
+            </div>
+            <div class="offcanvas-body">
+                <ul class="nav flex-column">
+
+                    <li class="nav-item mb-2">
+                        <a class="nav-link" href="{% url 'coiffeuse_dashboard' %}">
+                            <i class="bi bi-speedometer2 me-2"></i>
+                            Dashboard
+                        </a>
+                    </li>
+
+                    <li class="nav-item mb-2">
+                        <a class="nav-link" href="{% url 'coiffeuse_infos' %}">
+                            <i class="bi bi-shop me-2"></i>
+                            Informations salon
+                        </a>
+                    </li>
+
+                    <li class="nav-item mb-2">
+                        <a class="nav-link" href="{% url 'coiffeuse_prestations' %}">
+                            <i class="bi bi-scissors me-2"></i>
+                            Prestations
+                        </a>
+                    </li>
+                    <li class="nav-item mb-2">
+                        <a class="nav-link" href="#">
+                            <i class="bi bi-search me-2"></i>
+                            Abonnements
+                        </a>
+                    </li>
+                    <hr>
+                    <li class="nav-item mb-2">
+                        <a class="nav-link" href="{% url 'coiffeuse_service_client' %}">
+                            <i class="bi bi-scissors me-2"></i>
+                            Service Client
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+
+        <!-- CONTENU PRINCIPAL -->
+        <main class="col-lg-10 ms-sm-auto px-md-4 py-4">
+            {% block content %}{% endblock %}
+        </main>
+
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

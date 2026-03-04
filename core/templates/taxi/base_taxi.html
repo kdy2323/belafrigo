@@ -1,0 +1,184 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}BelAfriGo Taxi{% endblock %}</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <link rel="icon" href="{% static 'img/favi.ico' %}" type="image/x-icon">
+</head>
+<body class="bg-light">
+
+<!-- NAVBAR NOIRE -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
+    <div class="container-fluid">
+
+        <!-- Toggle mobile -->
+        <button class="btn btn-outline-light me-3 d-lg-none"
+                data-bs-toggle="offcanvas"
+                data-bs-target="#sidebarTaxi">
+            <i class="bi bi-list"></i>
+        </button>
+
+        <a class="navbar-brand fw-bold" href="#">
+            <img src="{% static 'img/logo.png' %}" width="30" height="30" class="me-2">
+            BelAfriGo
+        </a>
+
+        <div class="ms-auto d-flex align-items-center">
+            <span class="text-white me-3">
+                <i class="bi bi-person-circle"></i> {{ request.user.username }}
+            </span>
+            <a href="{% url 'logout' %}" class="btn btn-light btn-sm">
+                <i class="bi bi-box-arrow-right"></i> Déconnexion
+            </a>
+        </div>
+    </div>
+</nav>
+
+<div class="container-fluid">
+    <div class="row">
+
+        <!-- SIDEBAR DESKTOP -->
+        <nav class="col-lg-2 d-none d-lg-block bg-white shadow-sm vh-100">
+            <div class="pt-4 px-3">
+
+                <h6 class="fw-bold text-dark mb-3">
+                    Espace Chauffeur
+                </h6>
+
+                <ul class="nav flex-column">
+
+                    <li class="nav-item mb-2">
+                        <a class="nav-link text-dark {% if request.resolver_match.url_name == 'taxi_dashboard' %}fw-bold text-black{% endif %}" 
+                           href="{% url 'taxi_dashboard' %}">
+                            <i class="bi bi-bar-chart-line me-2"></i> Dashboard
+                        </a>
+                    </li>
+
+                    <li class="nav-item mb-2">
+                        <a class="nav-link text-dark {% if request.resolver_match.url_name == 'taxi_profile' %}fw-bold text-black{% endif %}" 
+                           href="{% url 'taxi_profile' %}">
+                            <i class="bi bi-person me-2"></i> Mon Profil
+                        </a>
+                    </li>
+
+                    <li class="nav-item mb-2">
+                        <a class="nav-link text-dark {% if request.resolver_match.url_name == 'taxi_car' %}fw-bold text-black{% endif %}" 
+                           href="{% url 'taxi_car' %}">
+                            <i class="bi bi-car-front me-2"></i> Ma Voiture
+                        </a>
+                    </li>
+
+                    <li class="nav-item mb-2">
+                        <a class="nav-link text-dark {% if request.resolver_match.url_name == 'taxi_courses' %}fw-bold text-black{% endif %}" 
+                           href="{% url 'taxi_courses' %}">
+                            <i class="bi bi-receipt me-2"></i> Mes Courses
+                        </a>
+                    </li>
+
+                    <li class="nav-item mb-2">
+                        <a class="nav-link text-dark {% if request.resolver_match.url_name == 'taxi_solde' %}fw-bold text-black{% endif %}" 
+                           href="{% url 'taxi_solde' %}">
+                            <i class="bi bi-wallet2 me-2"></i> Mon Solde
+                        </a>
+                    </li>
+
+                    <hr class="my-3">
+
+                    <li class="nav-item mb-2">
+                        <a class="nav-link text-dark {% if request.resolver_match.url_name == 'taxi_service_client' %}fw-bold text-black{% endif %}" 
+                           href="{% url 'taxi_service_client' %}">
+                            <i class="bi bi-headset me-2"></i> Service Client
+                        </a>
+                    </li>
+
+                </ul>
+
+                <hr>
+
+                <!-- STATUS -->
+                <div class="mt-3">
+                    <div class="card shadow-sm border-0">
+                        <div class="card-body text-center p-2">
+                            <small class="text-muted">Statut</small>
+                            <div class="fw-bold text-success">
+                                En ligne
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </nav>
+
+        <!-- SIDEBAR MOBILE -->
+        <div class="offcanvas offcanvas-start" tabindex="-1" id="sidebarTaxi">
+            <div class="offcanvas-header bg-dark text-white">
+                <h5 class="offcanvas-title">Espace Chauffeur</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
+            </div>
+            <div class="offcanvas-body">
+
+                <ul class="nav flex-column">
+
+                    <li class="nav-item mb-2">
+                        <a class="nav-link" href="{% url 'taxi_dashboard' %}">
+                            <i class="bi bi-bar-chart-line me-2"></i> Dashboard
+                        </a>
+                    </li>
+
+                    <li class="nav-item mb-2">
+                        <a class="nav-link" href="{% url 'taxi_profile' %}">
+                            <i class="bi bi-person me-2"></i> Mon Profil
+                        </a>
+                    </li>
+
+                    <li class="nav-item mb-2">
+                        <a class="nav-link" href="{% url 'taxi_car' %}">
+                            <i class="bi bi-car-front me-2"></i> Ma Voiture
+                        </a>
+                    </li>
+
+                    <li class="nav-item mb-2">
+                        <a class="nav-link" href="{% url 'taxi_courses' %}">
+                            <i class="bi bi-receipt me-2"></i> Mes Courses
+                        </a>
+                    </li>
+
+                    <li class="nav-item mb-2">
+                        <a class="nav-link" href="{% url 'taxi_solde' %}">
+                            <i class="bi bi-wallet2 me-2"></i> Mon Solde
+                        </a>
+                    </li>
+
+                    <li class="nav-item mb-2">
+                        <a class="nav-link" href="{% url 'taxi_service_client' %}">
+                            <i class="bi bi-headset me-2"></i> Service Client
+                        </a>
+                    </li>
+
+                </ul>
+
+            </div>
+        </div>
+
+        <!-- CONTENT -->
+        <main class="col-lg-10 ms-sm-auto px-md-4 py-4">
+            {% block content %}{% endblock %}
+        </main>
+
+    </div>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

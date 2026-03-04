@@ -1,0 +1,105 @@
+{% extends 'coiffeuse/base_coiffeuse.html' %}
+
+{% block content %}
+
+<h2 class="fw-bold mb-4">
+    👋 Bonjour, {{ coiffeuse.user.username }}
+</h2>
+
+<div class="row g-4">
+
+    <!-- STATUT -->
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm rounded-4">
+            <div class="card-body">
+                <h6 class="text-muted">Statut du compte</h6>
+
+                {% if is_paid %}
+                    <span class="badge bg-success fs-6">Actif</span>
+                {% else %}
+                    <span class="badge bg-danger fs-6">Inactif</span>
+                    <div class="mt-3">
+                        <a href="{% url 'coiffeuse_payment' %}" class="btn btn-danger btn-sm rounded-pill">
+                            Payer maintenant
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- DISPONIBILITÉ -->
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm rounded-4">
+            <div class="card-body text-center">
+                <h6 class="text-muted">Disponibilité</h6>
+
+                <button id="availability-btn"
+                        class="btn rounded-pill px-4 {% if coiffeuse.is_available %}btn-success{% else %}btn-secondary{% endif %}">
+                    {% if coiffeuse.is_available %}Disponible{% else %}Indisponible{% endif %}
+                </button>
+
+                <p id="availability-text" class="mt-3 small text-muted">
+                    {% if coiffeuse.is_available %}
+                        Vous êtes visible par les clientes
+                    {% else %}
+                        Vous êtes invisible par les clientes
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- INFOS -->
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm rounded-4">
+            <div class="card-body">
+                <h6 class="text-muted">Mes informations</h6>
+
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item"><strong>Salon :</strong> {{ coiffeuse.salon_name }}</li>
+                    <li class="list-group-item"><strong>Ville :</strong> {{ coiffeuse.ville }}</li>
+                    <li class="list-group-item"><strong>Téléphone :</strong> {{ coiffeuse.phone_number }}</li>
+                </ul>
+
+                <a href="{% url 'coiffeuse_infos' %}" class="btn btn-outline-danger btn-sm mt-3 rounded-pill">
+                    Modifier
+                </a>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<script>
+document.getElementById("availability-btn").addEventListener("click", function() {
+    fetch("{% url 'toggle_availability' %}", {
+        method: "POST",
+        headers: {
+            "X-CSRFToken": "{{ csrf_token }}",
+            "Accept": "application/json"
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+
+        const btn = document.getElementById("availability-btn");
+        const text = document.getElementById("availability-text");
+
+        if(data.is_available) {
+            btn.textContent = "Disponible";
+            btn.classList.remove("btn-secondary");
+            btn.classList.add("btn-success");
+            text.textContent = "Vous êtes visible par les clientes";
+        } else {
+            btn.textContent = "Indisponible";
+            btn.classList.remove("btn-success");
+            btn.classList.add("btn-secondary");
+            text.textContent = "Vous êtes invisible par les clientes";
+        }
+    });
+});
+</script>
+
+{% endblock %}
